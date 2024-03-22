@@ -99,7 +99,7 @@ def parse_test_configs():
     ##############Dataset, Checkpoints, and results dir configs#########
     ####################################################################
     configs.root_dir = '../'
-    configs.dataset_dir = os.path.join(configs.root_dir, 'dataset', 'kitti')
+    configs.dataset_dir = os.path.join('/home/gahyeon/Desktop/data', 'kitti')
 
     if configs.save_test_output:
         configs.results_dir = os.path.join(configs.root_dir, 'results', configs.saved_fn)

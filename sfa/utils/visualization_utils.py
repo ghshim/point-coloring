@@ -58,7 +58,7 @@ def project_to_image(pts_3d, P):
     pts_2d = np.dot(P, pts_3d_homo.transpose(1, 0)).transpose(1, 0)
     pts_2d = pts_2d[:, :2] / pts_2d[:, 2:]
 
-    return pts_2d.astype(np.int)
+    return pts_2d.astype(np.int32)
 
 
 def draw_box_3d_v2(image, qs, color=(255, 0, 255), thickness=2):
