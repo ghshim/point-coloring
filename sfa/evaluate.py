@@ -6,20 +6,22 @@ import sys
 import warnings
 
 warnings.filterwarnings("ignore", category=UserWarning)
-
+import cv2
 import torch
 import torch.utils.data.distributed
 from tqdm import tqdm
 from easydict import EasyDict as edict
+from utils.torch_utils import _sigmoid
+import config.kitti_config as cnf
 
 sys.path.append('./')
 
 from data_process.kitti_dataloader import create_val_dataloader
 from models.model_utils import create_model
-from utils.misc import AverageMeter, ProgressMeter
-from utils.evaluation_utils import post_processing, get_batch_statistics_rotated_bbox, ap_per_class, load_classes, post_processing_v2, decode
+from utils.misc import AverageMeter, ProgressMeter, time_synchronized
+from utils.evaluation_utils import decode, post_processing, get_batch_statistics_rotated_bbox, ap_per_class, load_classes, convert_det_to_real_values, decode, post_processing, post_processing_v2, get_batch_statistics_rotated_bbox, ap_per_class, draw_predictions
 
-
+from data_process.kitti_data_utils import Calibration
 def evaluate_mAP(val_loader, model, configs, logger):
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
@@ -31,34 +33,42 @@ def evaluate_mAP(val_loader, model, configs, logger):
     # switch to evaluate mode
     model.eval()
     with torch.no_grad():
-        start_time = time.time()
         for batch_idx, batch_data in enumerate(tqdm(val_loader)):
-            data_time.update(time.time() - start_time)
-            _, imgs, targets = batch_data
+            metadatas, bev_maps, img_rgbs = batch_data
+            input_bev_maps = bev_maps.to(configs.device, non_blocking=True).float()
+            t1 = time_synchronized()
+            outputs = model(input_bev_maps)
             # Extract labels
+            outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
+            outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
 
-            detdata = decode(targets['hm_cen'], targets['cen_offset'], targets['direction'], targets['z_coor'], targets['dim'], configs)
-            
-            labels += detdata[:, 1].tolist()
-            # Rescale x, y, w, h of targets ((box_idx, class, x, y, w, l, im, re))
-            targets[:, 2:6] *= configs.img_size
-            imgs = imgs.to(configs.device, non_blocking=True)
+            detections = decode(outputs['hm_cen'], outputs['cen_offset'], outputs['direction'], outputs['z_coor'],
+                                outputs['dim'], K=configs.K)
+            detections = detections.cpu().numpy().astype(np.float32)
+            detections = post_processing(detections, configs.num_classes, configs.down_ratio, configs.peak_thresh)
+            t2 = time_synchronized()
+            detections = detections[0]
+            # Draw prediction in the image
+            bev_map = (bev_maps.squeeze().permute(1, 2, 0).numpy() * 255).astype(np.uint8)
+            bev_map = bev_map[...,:3]
+            bev_map = cv2.resize(bev_map, (cnf.BEV_WIDTH, cnf.BEV_HEIGHT))
+            # print(bev_mapp)
+            bev_map = draw_predictions(bev_map, detections.copy(), configs.num_classes)
 
-            outputs = model(imgs)
-            outputs = post_processing_v2(outputs, conf_thresh=configs.conf_thresh, nms_thresh=configs.nms_thresh)
+            # Rotate the bev_map
+            bev_map = cv2.rotate(bev_map, cv2.ROTATE_180)
 
-            sample_metrics += get_batch_statistics_rotated_bbox(outputs, targets, iou_threshold=configs.iou_thresh)
+            img_path = metadatas['img_path'][0]
+            img_rgb = img_rgbs[0].numpy()
+            img_rgb *= img_rgb * 255 # This is not sure ..
+            img_rgb = cv2.resize(img_rgb, (img_rgb.shape[1], img_rgb.shape[0]))
+            img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
+            calib = Calibration(img_path.replace(".png", ".txt").replace("image_2", "calib"))
+            kitti_dets = convert_det_to_real_values(detections)
 
-            # measure elapsed time
-            # torch.cuda.synchronize()
-            batch_time.update(time.time() - start_time)
 
-            # Log message
-            if logger is not None:
-                if ((batch_idx + 1) % configs.print_freq) == 0:
-                    logger.info(progress.get_message(batch_idx))
+            sample_metrics += get_batch_statistics_rotated_bbox(outputs, img_rgbs, iou_threshold=configs.iou_thresh)
 
-            start_time = time.time()
 
         # Concatenate sample statistics
         true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
@@ -94,12 +104,16 @@ def parse_eval_configs():
     parser.add_argument('--batch_size', type=int, default=1,
                         help='mini-batch size (default: 4)')
 
+    parser.add_argument('--peak_thresh', type=float, default=0.2)
     parser.add_argument('--conf-thresh', type=float, default=0.5,
                         help='for evaluation - the threshold for class conf')
     parser.add_argument('--nms-thresh', type=float, default=0.5,
                         help='for evaluation - the threshold for nms')
     parser.add_argument('--iou-thresh', type=float, default=0.5,
                         help='for evaluation - the threshold for IoU')
+    
+    parser.add_argument('--K', type=int, default=50,
+                        help='the number of top K')
 
     configs = edict(vars(parser.parse_args()))
     configs.pin_memory = True
