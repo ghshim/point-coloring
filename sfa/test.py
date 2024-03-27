@@ -145,7 +145,6 @@ if __name__ == '__main__':
             bev_map = (bev_maps.squeeze().permute(1, 2, 0).numpy() * 255).astype(np.uint8)
             bev_map = bev_map[...,:3]
             bev_map = cv2.resize(bev_map, (cnf.BEV_WIDTH, cnf.BEV_HEIGHT))
-            # print(bev_mapp)
             bev_map = draw_predictions(bev_map, detections.copy(), configs.num_classes)
 
             # Rotate the bev_map
@@ -153,7 +152,7 @@ if __name__ == '__main__':
 
             img_path = metadatas['img_path'][0]
             img_rgb = img_rgbs[0].numpy()
-            img_rgb *= img_rgb * 255 # This is not sure ..
+            img_rgb = img_rgb * 255
             img_rgb = cv2.resize(img_rgb, (img_rgb.shape[1], img_rgb.shape[0]))
             img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
             calib = Calibration(img_path.replace(".png", ".txt").replace("image_2", "calib"))
