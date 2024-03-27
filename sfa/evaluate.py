@@ -17,7 +17,7 @@ sys.path.append('./')
 from data_process.kitti_dataloader import create_val_dataloader
 from models.model_utils import create_model
 from utils.misc import AverageMeter, ProgressMeter
-from utils.evaluation_utils import post_processing, get_batch_statistics_rotated_bbox, ap_per_class, load_classes, post_processing_v2
+from utils.evaluation_utils import post_processing, get_batch_statistics_rotated_bbox, ap_per_class, load_classes, post_processing_v2, decode
 
 
 def evaluate_mAP(val_loader, model, configs, logger):
@@ -36,7 +36,10 @@ def evaluate_mAP(val_loader, model, configs, logger):
             data_time.update(time.time() - start_time)
             _, imgs, targets = batch_data
             # Extract labels
-            labels += targets[:, 1].tolist()
+
+            detdata = decode(targets['hm_cen'], targets['cen_offset'], targets['direction'], targets['z_coor'], targets['dim'], configs)
+            
+            labels += detdata[:, 1].tolist()
             # Rescale x, y, w, h of targets ((box_idx, class, x, y, w, l, im, re))
             targets[:, 2:6] *= configs.img_size
             imgs = imgs.to(configs.device, non_blocking=True)
@@ -86,9 +89,9 @@ def parse_eval_configs():
                         help='the size of input image')
     parser.add_argument('--num_samples', type=int, default=None,
                         help='Take a subset of the dataset to run and debug')
-    parser.add_argument('--num_workers', type=int, default=2,
+    parser.add_argument('--num_workers', type=int, default=1,
                         help='Number of threads for loading data')
-    parser.add_argument('--batch_size', type=int, default=2,
+    parser.add_argument('--batch_size', type=int, default=1,
                         help='mini-batch size (default: 4)')
 
     parser.add_argument('--conf-thresh', type=float, default=0.5,
@@ -109,24 +112,32 @@ def parse_eval_configs():
     configs.head_conv = 256 if 'dla' in configs.arch else 64
     configs.imagenet_pretrained = False
     configs.num_classes = 3
-    configs.num_vertexes = 8
+    configs = edict(vars(parser.parse_args()))
+    configs.pin_memory = True
+    configs.distributed = False  # For testing on 1 GPU only
+
+    configs.input_size = (608, 608)
+    configs.hm_size = (152, 152)
+    configs.down_ratio = 4
+    configs.max_objects = 50
+
+    configs.imagenet_pretrained = False
+    configs.head_conv = 64
+    configs.num_classes = 3
     configs.num_center_offset = 2
-    configs.num_vertexes_offset = 2
-    configs.num_dimension = 6
-    configs.num_rot = 8
-    configs.num_depth = 1
-    configs.num_wh = 2
+    configs.num_z = 1
+    configs.num_dim = 3
+    configs.num_direction = 2  # sin, cos
+
     configs.heads = {
-        'hm_mc': configs.num_classes,
-        'hm_ver': configs.num_vertexes,
-        'vercoor': configs.num_vertexes * 2,
-        'cenoff': configs.num_center_offset,
-        'veroff': configs.num_vertexes_offset,
-        'dim': configs.num_dimension,
-        'rot': configs.num_rot,
-        'depth': configs.num_depth,
-        'wh': configs.num_wh
+        'hm_cen': configs.num_classes,
+        'cen_offset': configs.num_center_offset,
+        'direction': configs.num_direction,
+        'z_coor': configs.num_z,
+        'dim': configs.num_dim
     }
+    configs.num_input_features = 4
+    configs.dataset_dir = os.path.join('/home/ahrilab/PrincipleDL/dataset', 'kitti')
     return configs
 
 
@@ -140,7 +151,7 @@ if __name__ == '__main__':
     print('\n\n' + '-*=' * 30 + '\n\n')
     configs.device = torch.device('cpu' if configs.no_cuda else 'cuda:{}'.format(configs.gpu_idx))
     assert os.path.isfile(configs.pretrained_path), "No file at {}".format(configs.pretrained_path)
-    model.load_state_dict(torch.load(configs.pretrained_path, map_location=configs.device), strict=False)
+    model.load_state_dict(torch.load(configs.pretrained_path, map_location='cpu'), strict=False)
 
     
     model = model.to(device=configs.device)
