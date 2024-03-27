@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import pandas as pd
 from pytictoc import TicToc
+import time
 t = TicToc()
 
 src_dir = os.path.dirname(os.path.realpath(__file__))
@@ -30,6 +31,7 @@ def add_v_labels(lidar_points):
 
 def makeBEVMap(PointCloud_,Camera_,Calib_, boundary):
     t.tic()
+    t1 = time.time()
     Height = cnf.BEV_HEIGHT + 1
     Width = cnf.BEV_WIDTH + 1
 
@@ -143,6 +145,8 @@ def makeBEVMap(PointCloud_,Camera_,Calib_, boundary):
     RGB_Map[1, :, :] = heightMap[:cnf.BEV_HEIGHT, :cnf.BEV_WIDTH]  # g_map
     RGB_Map[0, :, :] = intensityMap[:cnf.BEV_HEIGHT, :cnf.BEV_WIDTH]  # b_map
     t.toc()
+    t2 = time.time()
+    print("Make BEV map takes: {:.1f}ms".format((t2 - t1) * 1000))
     return RGB_Map
 
 
