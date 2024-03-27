@@ -36,7 +36,44 @@ import box_np_ops
 import config.kitti_config as cnf
 from data_process.kitti_bev_utils import drawRotatedBox
 
+def load_classes(path):
 
+
+    fp = open(path, "r")
+    names = fp.read().split("\n")[:-1]
+    return names
+
+def post_processing_v2(outputs, conf_thresh=0.5, nms_thresh=0.5):
+    """
+    :param outputs: [batch_size, num_classes, num_anchors, 7]
+    :param conf_thresh:
+    :param nms_thresh:
+    :return:
+    """
+    # (scores x 1, xs x 1, ys x 1, z_coor x 1, dim x 3, direction x 2, clses x 1)
+    detections = []
+    for i in range(len(outputs)):
+        output = outputs[i]
+        for cls_id in range(output.shape[1]):
+            cls_scores = _sigmoid(output[i, cls_id, :, 0])
+            scores = cls_scores
+            # (scores x 1, xs x 1, ys x 1, z_coor x 1, dim x 3, direction x 2, clses x 1)
+            cls_detections = decode(output[i, cls_id, :, 0:1], output[i, cls_id, :, 1:3], output[i, cls_id, :, 3:5],
+                                    output[i, cls_id, :, 5:6], output[i, cls_id, :, 6:9], K=40)
+            # Filter out low scores
+            keep_inds = (cls_detections[:, 0] > conf_thresh)
+            cls_detections = cls_detections[keep_inds]
+            scores = scores[keep_inds]
+            # Apply NMS
+            keep_inds = box_np_ops.boxes_iou_bev(cls_detections[:, 1:7], cls_detections[:, 1:7]) < nms_thresh
+            cls_detections = cls_detections[keep_inds]
+            scores = scores[keep_inds]
+            # Add class index
+            cls_detections = np.concatenate([cls_detections, np.full((len(cls_detections), 1), cls_id)], axis=1)
+            # Add scores
+            cls_detections = np.concatenate([cls_detections, scores[:, None]], axis=1)
+            detections.append(cls_detections)
+    return detections
 def _nms(heat, kernel=3):
     pad = (kernel - 1) // 2
     hmax = F.max_pool2d(heat, (kernel, kernel), stride=1, padding=pad)
@@ -129,6 +166,59 @@ def decode(hm_cen, cen_offset, direction, z_coor, dim, K=40):
 
     return detections
 
+def ap_per_class(tp, conf, pred_cls, target_cls):
+    """ Compute the average precision, given the recall and precision curves.
+    Source: https://github.com/rafaelpadilla/Object-Detection-Metrics.
+    # Arguments
+        tp:    True positives (list).
+        conf:  Objectness value from 0-1 (list).
+        pred_cls: Predicted object classes (list).
+        target_cls: True object classes (list).
+    # Returns
+        The average precision as computed in py-faster-rcnn.
+    """
+
+    # Sort by objectness
+    i = np.argsort(-conf)
+    tp, conf, pred_cls = tp[i], conf[i], pred_cls[i]
+
+    # Find unique classes
+    unique_classes = np.unique(target_cls)
+
+    # Create Precision-Recall curve and compute AP for each class
+    ap, p, r = [], [], []
+    for c in tqdm.tqdm(unique_classes, desc="Computing AP"):
+        i = pred_cls == c
+        n_gt = (target_cls == c).sum()  # Number of ground truth objects
+        n_p = i.sum()  # Number of predicted objects
+
+        if n_p == 0 and n_gt == 0:
+            continue
+        elif n_p == 0 or n_gt == 0:
+            ap.append(0)
+            r.append(0)
+            p.append(0)
+        else:
+            # Accumulate FPs and TPs
+            fpc = (1 - tp[i]).cumsum()
+            tpc = (tp[i]).cumsum()
+
+            # Recall
+            recall_curve = tpc / (n_gt + 1e-16)
+            r.append(recall_curve[-1])
+
+            # Precision
+            precision_curve = tpc / (tpc + fpc)
+            p.append(precision_curve[-1])
+
+            # AP from recall-precision curve
+            ap.append(compute_ap(recall_curve, precision_curve))
+
+    # Compute F1 score (harmonic mean of precision and recall)
+    p, r, ap = np.array(p), np.array(r), np.array(ap)
+    f1 = 2 * p * r / (p + r + 1e-16)
+
+    return p, r, ap, f1, unique_classes.astype("int32")
 
 def get_yaw(direction):
     return np.arctan2(direction[:, 0:1], direction[:, 1:2])
@@ -196,6 +286,47 @@ def convert_det_to_real_values(detections, num_classes=3, add_score=False):
                     kitti_dets.append([cls_id, x, y, z, _h, w, l, _yaw, _score])
 
     return np.array(kitti_dets)
+def get_batch_statistics_rotated_bbox(outputs, targets, iou_threshold):
+    """ Compute true positives, predicted scores and predicted labels per sample """
+    batch_metrics = []
+    for sample_i in range(len(outputs)):
+
+        if outputs[sample_i] is None:
+            continue
+
+        output = outputs[sample_i]
+        pred_boxes = output[:, :6]
+        pred_scores = output[:, 6]
+        pred_labels = output[:, -1]
+
+        true_positives = np.zeros(pred_boxes.shape[0])
+
+        annotations = targets[targets[:, 0] == sample_i][:, 1:]
+        target_labels = annotations[:, 0] if len(annotations) else []
+        if len(annotations):
+            detected_boxes = []
+            target_boxes = annotations[:, 1:]
+
+            for pred_i, (pred_box, pred_label) in enumerate(zip(pred_boxes, pred_labels)):
+
+                # If targets are found break
+                if len(detected_boxes) == len(annotations):
+                    break
+
+                # Ignore if label is not one of the target labels
+                if pred_label not in target_labels:
+                    continue
+
+                #iou, box_index = rotated_bbox_iou(pred_box.unsqueeze(0), target_boxes, 1.0, False).squeeze().max(0)
+                ious = rotated_bbox_iou_polygon(pred_box, target_boxes)
+                iou, box_index = torch.from_numpy(ious).max(0)
+
+                if iou >= iou_threshold and box_index not in detected_boxes:
+                    true_positives[pred_i] = 1
+                    detected_boxes += [box_index]
+        batch_metrics.append([true_positives, pred_scores, pred_labels])
+    return batch_metrics
+
 
 def convert_detection_to_kitti_annos(detection, dataset):
     print("Convert detection results to kitti format")

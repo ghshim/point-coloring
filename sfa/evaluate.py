@@ -66,13 +66,13 @@ def evaluate_mAP(val_loader, model, configs, logger):
 
 def parse_eval_configs():
     parser = argparse.ArgumentParser(description='Demonstration config for Complex YOLO Implementation')
-    parser.add_argument('--classnames-infor-path', type=str, default='../dataset/kitti/classes_names.txt',
+    parser.add_argument('--classnames-infor-path', type=str, default='../../dataset/kitti/classes_names.txt',
                         metavar='PATH', help='The class names of objects in the task')
     parser.add_argument('-a', '--arch', type=str, default='darknet', metavar='ARCH',
                         help='The name of the model architecture')
     parser.add_argument('--cfgfile', type=str, default='./config/cfg/complex_yolov4.cfg', metavar='PATH',
                         help='The path for cfgfile (only for darknet)')
-    parser.add_argument('--pretrained_path', type=str, default='/home/haechan/Desktop/SFA3D-master/checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', metavar='PATH',
+    parser.add_argument('--pretrained_path', type=str, default='/home/ahrilab/PrincipleDL/point-coloring/checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', metavar='PATH',
                         help='the path of the pretrained checkpoint')
     parser.add_argument('--use_giou_loss', action='store_true',
                         help='If true, use GIoU loss during training. If false, use MSE loss for training')
@@ -106,7 +106,27 @@ def parse_eval_configs():
     ####################################################################
     configs.working_dir = '../'
     configs.dataset_dir = os.path.join(configs.working_dir, 'dataset', 'kitti')
-
+    configs.head_conv = 256 if 'dla' in configs.arch else 64
+    configs.imagenet_pretrained = False
+    configs.num_classes = 3
+    configs.num_vertexes = 8
+    configs.num_center_offset = 2
+    configs.num_vertexes_offset = 2
+    configs.num_dimension = 6
+    configs.num_rot = 8
+    configs.num_depth = 1
+    configs.num_wh = 2
+    configs.heads = {
+        'hm_mc': configs.num_classes,
+        'hm_ver': configs.num_vertexes,
+        'vercoor': configs.num_vertexes * 2,
+        'cenoff': configs.num_center_offset,
+        'veroff': configs.num_vertexes_offset,
+        'dim': configs.num_dimension,
+        'rot': configs.num_rot,
+        'depth': configs.num_depth,
+        'wh': configs.num_wh
+    }
     return configs
 
 
@@ -120,7 +140,7 @@ if __name__ == '__main__':
     print('\n\n' + '-*=' * 30 + '\n\n')
     configs.device = torch.device('cpu' if configs.no_cuda else 'cuda:{}'.format(configs.gpu_idx))
     assert os.path.isfile(configs.pretrained_path), "No file at {}".format(configs.pretrained_path)
-    model.load_state_dict(torch.load(configs.pretrained_path, map_location=configs.device))
+    model.load_state_dict(torch.load(configs.pretrained_path, map_location=configs.device), strict=False)
 
     
     model = model.to(device=configs.device)

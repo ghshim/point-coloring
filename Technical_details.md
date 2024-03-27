@@ -53,3 +53,8 @@ center confidences are larger than 0.2 were kept.
 
 - The model could be trained with more classes and with a larger detected area by modifying configurations in 
 the [config/kitti_dataset.py](https://github.com/maudzung/Super-Fast-Accurate-3D-Object-Detection/blob/master/src/config/kitti_config.py) file.
+
+
+## Evaluate
+
+python evaluate.py --gpu_idx 0 --iou-thresh 0.5 -a fpn_resnet_18
