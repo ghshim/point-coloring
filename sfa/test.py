@@ -130,12 +130,12 @@ if __name__ == '__main__':
             metadatas, bev_maps, img_rgbs = batch_data
             input_bev_maps = bev_maps.to(configs.device, non_blocking=True).float()
             t1 = time_synchronized()
-            outputs = model(input_bev_maps)
+            outputs = model(input_bev_maps)###inferencing
             outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
             outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
             # detections size (batch_size, K, 10)
             detections = decode(outputs['hm_cen'], outputs['cen_offset'], outputs['direction'], outputs['z_coor'],
-                                outputs['dim'], K=configs.K)
+                                outputs['dim'], K=configs.K)## size ouput (batch_size, K, 10)
             detections = detections.cpu().numpy().astype(np.float32)
             detections = post_processing(detections, configs.num_classes, configs.down_ratio, configs.peak_thresh)
             t2 = time_synchronized()
@@ -163,6 +163,7 @@ if __name__ == '__main__':
                 img_bgr = show_rgb_image_with_boxes(img_bgr, kitti_dets, calib)
 
             out_img = merge_rgb_to_bev(img_bgr, bev_map, output_width=configs.output_width)
+            print("kiti_dets: ", kitti_dets)
 
             print('\tDone testing the {}th sample, time: {:.1f}ms, speed {:.2f}FPS'.format(batch_idx, (t2 - t1) * 1000,
                                                                                            1 / (t2 - t1)))

@@ -22,6 +22,7 @@ from utils.misc import AverageMeter, ProgressMeter, time_synchronized
 from utils.evaluation_utils import decode, post_processing, get_batch_statistics_rotated_bbox, ap_per_class, load_classes, convert_det_to_real_values, decode, post_processing, post_processing_v2, get_batch_statistics_rotated_bbox, ap_per_class, draw_predictions
 
 from data_process.kitti_data_utils import Calibration
+
 def evaluate_mAP(val_loader, model, configs, logger):
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
@@ -34,10 +35,11 @@ def evaluate_mAP(val_loader, model, configs, logger):
     model.eval()
     with torch.no_grad():
         for batch_idx, batch_data in enumerate(tqdm(val_loader)):
-            metadatas, bev_maps, img_rgbs = batch_data
-            input_bev_maps = bev_maps.to(configs.device, non_blocking=True).float()
+            metadatas, imgs, targets = batch_data
+            input_bev_maps = imgs.to(configs.device, non_blocking=True).float()
             t1 = time_synchronized()
             outputs = model(input_bev_maps)
+            
             # Extract labels
             outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
             outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
@@ -49,25 +51,20 @@ def evaluate_mAP(val_loader, model, configs, logger):
             t2 = time_synchronized()
             detections = detections[0]
             # Draw prediction in the image
-            bev_map = (bev_maps.squeeze().permute(1, 2, 0).numpy() * 255).astype(np.uint8)
-            bev_map = bev_map[...,:3]
-            bev_map = cv2.resize(bev_map, (cnf.BEV_WIDTH, cnf.BEV_HEIGHT))
-            # print(bev_mapp)
-            bev_map = draw_predictions(bev_map, detections.copy(), configs.num_classes)
+            print("metadatas: ", metadatas['img_path'])
+    
 
-            # Rotate the bev_map
-            bev_map = cv2.rotate(bev_map, cv2.ROTATE_180)
-
-            img_path = metadatas['img_path'][0]
-            img_rgb = img_rgbs[0].numpy()
-            img_rgb *= img_rgb * 255 # This is not sure ..
-            img_rgb = cv2.resize(img_rgb, (img_rgb.shape[1], img_rgb.shape[0]))
-            img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
-            calib = Calibration(img_path.replace(".png", ".txt").replace("image_2", "calib"))
             kitti_dets = convert_det_to_real_values(detections)
+            
+            print("output: ", detections)
+
+           
+            
+            # labels += targets[:, 1].tolist()
+            # print("labels: ", labels)
 
 
-            sample_metrics += get_batch_statistics_rotated_bbox(outputs, img_rgbs, iou_threshold=configs.iou_thresh)
+            sample_metrics += get_batch_statistics_rotated_bbox(outputs, targets, iou_threshold=configs.iou_thresh)
 
 
         # Concatenate sample statistics
@@ -75,7 +72,6 @@ def evaluate_mAP(val_loader, model, configs, logger):
         precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
 
     return precision, recall, AP, f1, ap_class
-
 
 def parse_eval_configs():
     parser = argparse.ArgumentParser(description='Demonstration config for Complex YOLO Implementation')
