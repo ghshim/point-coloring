@@ -1,0 +1,170 @@
+2024-04-17 15:17:03,548: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:17:03,548: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:17:06,262: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:17:07,744: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:17:07,744: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:28:54,640: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:28:54,640: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:28:54,753: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:28:55,639: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:28:55,639: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:31:12,651: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:31:12,651: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:31:12,761: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:31:13,645: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:31:13,645: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:36:57,104: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:36:57,104: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:36:57,219: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:36:57,945: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:36:57,945: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:41:47,768: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:41:47,768: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:41:47,890: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:41:48,616: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:41:48,616: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:42:22,555: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:42:22,555: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:42:22,672: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:42:23,403: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:42:23,404: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:42:23,404: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 15:46:16,886: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:46:16,886: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:46:16,997: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:46:17,749: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:46:17,749: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:46:17,750: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 15:47:16,527: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:47:16,528: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:47:16,638: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:47:17,417: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:47:17,417: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:47:17,418: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 15:48:09,561: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:48:09,561: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:48:09,671: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:48:10,454: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:48:10,454: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:48:10,455: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 15:50:30,304: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:50:30,304: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:50:30,414: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:50:31,130: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:50:31,130: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:50:31,131: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 15:53:07,456: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:53:07,456: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:53:07,573: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:53:08,294: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:53:08,294: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:53:08,295: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 15:59:29,762: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 15:59:29,762: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 15:59:29,873: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 15:59:30,598: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 15:59:30,598: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 15:59:30,599: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 16:02:27,379: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 16:02:27,379: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 16:02:27,500: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 16:02:28,220: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 16:02:28,220: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 16:02:28,221: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 16:12:46,925: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 16:12:46,925: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 16:12:47,031: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 16:12:47,741: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 16:12:47,741: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 16:12:47,741: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-17 16:16:41,811: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-17 16:16:41,811: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-17 16:16:41,921: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-17 16:16:42,571: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-17 16:16:42,571: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-17 16:16:42,571: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375

@@ -1,1 +1,3 @@
 ./checkpoints
+/dataset/kitti/testing
+/dataset/kitti/training
