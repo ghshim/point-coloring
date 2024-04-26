@@ -162,7 +162,7 @@ if __name__ == '__main__':
 
             img_path = metadatas['img_path'][0]
             img_rgb = img_rgbs[0].numpy()
-            img_rgb = img_rgb * 255  # This is not sure ..
+            img_rgb = img_rgb * 255
             img_rgb = cv2.resize(img_rgb, (img_rgb.shape[1], img_rgb.shape[0]))
             img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
             calib = Calibration(img_path.replace(
