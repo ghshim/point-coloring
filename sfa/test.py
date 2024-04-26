@@ -20,6 +20,7 @@ from easydict import EasyDict as edict
 import cv2
 import torch
 import numpy as np
+import time
 
 src_dir = os.path.dirname(os.path.realpath(__file__))
 while not src_dir.endswith("sfa"):
@@ -45,7 +46,7 @@ def parse_test_configs():
     parser.add_argument('-a', '--arch', type=str, default='fpn_resnet_18', metavar='ARCH',
                         help='The name of the model architecture')
     parser.add_argument('--pretrained_path', type=str,
-                        default='../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', metavar='PATH',
+                        default='/home/gahyeon/Desktop/projects/point-coloring/checkpoints/fpn_resnet_18/Model_fpn_resnet_18_epoch_232.pth', metavar='PATH',
                         help='the path of the pretrained checkpoint')
     parser.add_argument('--K', type=int, default=50,
                         help='the number of top K')
@@ -99,7 +100,7 @@ def parse_test_configs():
     ##############Dataset, Checkpoints, and results dir configs#########
     ####################################################################
     configs.root_dir = '../'
-    configs.dataset_dir = os.path.join('/home/ahrilab/PrincipleDL/dataset', 'kitti')
+    configs.dataset_dir = os.path.join('../dataset', 'kitti')
 
     if configs.save_test_output:
         configs.results_dir = os.path.join(configs.root_dir, 'results', configs.saved_fn)
@@ -127,6 +128,7 @@ if __name__ == '__main__':
     test_dataloader = create_test_dataloader(configs)
     with torch.no_grad():
         for batch_idx, batch_data in enumerate(test_dataloader):
+            start_t = time.time()
             metadatas, bev_maps, img_rgbs = batch_data
             input_bev_maps = bev_maps.to(configs.device, non_blocking=True).float()
             t1 = time_synchronized()
@@ -182,7 +184,8 @@ if __name__ == '__main__':
                     out_cap.write(out_img)
                 else:
                     raise TypeError
-
+            end_t = time.time()
+            print(f"Inference Time: {end_t - start_t:.5f} sec")
             cv2.imshow('test-img', out_img)
             print('\n[INFO] Press n to see the next sample >>> Press Esc to quit...\n')
             if cv2.waitKey(0) & 0xFF == 27:
