@@ -168,3 +168,27 @@ number of trained parameters of the model: 12737761
 >>> Loading dataset & getting dataloader...
 2024-04-17 16:16:42,571: logger.py - info(), at Line 49:INFO:
 number of batches in training set: 375
+2024-04-26 16:34:39,981: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-26 16:34:39,981: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-26 16:34:40,350: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
+2024-04-26 16:34:41,705: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-26 16:34:41,705: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-26 16:34:41,706: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
+2024-04-26 17:12:31,523: logger.py - info(), at Line 49:INFO:
+>>> Created a new logger
+2024-04-26 17:12:31,523: logger.py - info(), at Line 49:INFO:
+>>> configs: {'seed': 2020, 'saved_fn': 'fpn_resnet_18', 'root_dir': '../', 'arch': 'fpn_resnet_18', 'pretrained_path': '../checkpoints/fpn_resnet_18/Model_fpn_resnet_18_epoch_250.pth', 'hflip_prob': 0.5, 'no_val': False, 'num_samples': None, 'num_workers': 4, 'batch_size': 16, 'print_freq': 50, 'tensorboard_freq': 50, 'checkpoint_freq': 2, 'start_epoch': 1, 'num_epochs': 300, 'lr_type': 'cosin', 'lr': 0.001, 'minimum_lr': 1e-07, 'momentum': 0.949, 'weight_decay': 0.0, 'optimizer_type': 'adam', 'steps': [150, 180], 'world_size': -1, 'rank': -1, 'dist_url': 'tcp://127.0.0.1:29500', 'dist_backend': 'nccl', 'gpu_idx': 0, 'no_cuda': False, 'multiprocessing_distributed': False, 'evaluate': True, 'resume_path': None, 'K': 50, 'device': device(type='cuda', index=0), 'ngpus_per_node': 1, 'pin_memory': True, 'input_size': (608, 608), 'hm_size': (152, 152), 'down_ratio': 4, 'max_objects': 50, 'imagenet_pretrained': True, 'head_conv': 64, 'num_classes': 3, 'num_center_offset': 2, 'num_z': 1, 'num_dim': 3, 'num_direction': 2, 'heads': {'hm_cen': 3, 'cen_offset': 2, 'direction': 2, 'z_coor': 1, 'dim': 3}, 'num_input_features': 4, 'dataset_dir': '../dataset/kitti', 'checkpoints_dir': '../checkpoints/fpn_resnet_18', 'logs_dir': '../logs/fpn_resnet_18', 'distributed': False, 'subdivisions': 4, 'is_master_node': True}
+2024-04-26 17:12:31,647: logger.py - info(), at Line 49:INFO:
+loaded pretrained model at ../checkpoints/fpn_resnet_18/Model_fpn_resnet_18_epoch_250.pth
+2024-04-26 17:12:32,314: logger.py - info(), at Line 49:INFO:
+number of trained parameters of the model: 12737761
+2024-04-26 17:12:32,314: logger.py - info(), at Line 49:INFO:
+>>> Loading dataset & getting dataloader...
+2024-04-26 17:12:32,315: logger.py - info(), at Line 49:INFO:
+number of batches in training set: 375
