@@ -226,13 +226,31 @@ def train_one_epoch(train_dataloader, model, optimizer, lr_scheduler, epoch, con
     for batch_idx, batch_data in enumerate(tqdm(train_dataloader)):
         data_time.update(time.time() - start_time)
         metadatas, imgs, targets = batch_data
+
+        # Debugging: print shapes and some values
+        print(f"Batch index: {batch_idx}")
+        print(f"Images shape: {imgs.shape}")
+        print(f"Targets: {targets}")
+
         batch_size = imgs.size(0)
         global_step = num_iters_per_epoch * (epoch - 1) + batch_idx + 1
         for k in targets.keys():
             targets[k] = targets[k].to(configs.device, non_blocking=True)
+
         imgs = imgs.to(configs.device, non_blocking=True).float()
+
+        # Debugging: print device and dtype
+        print(f"Images device: {imgs.device}, dtype: {imgs.dtype}")
+        print(
+            f"Targets device: {targets[k].device}, dtype: {targets[k].dtype}")
+
         outputs = model(imgs)
+
+        # Debugging: print outputs
+        print(f"Outputs: {outputs}")
+
         total_loss, loss_stats = criterion(outputs, targets)
+
         # For torch.nn.DataParallel case
         if (not configs.distributed) and (configs.gpu_idx is None):
             total_loss = torch.mean(total_loss)
@@ -323,6 +341,7 @@ def validate(val_dataloader, model, configs):
 
 if __name__ == '__main__':
     try:
+        mp.set_start_method('spawn')
         main()
     except KeyboardInterrupt:
         try:

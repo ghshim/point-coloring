@@ -5,11 +5,11 @@ import numpy as np
 def corners_nd(dims, origin=0.5):
     """generate relative box corners based on length per dim and
     origin point. 
-    
+
     Args:
         dims (float array, shape=[N, ndim]): array of length per dim
         origin (list or array or float): origin point relate to smallest point.
-    
+
     Returns:
         float array, shape=[N, 2 ** ndim, ndim]: returned corners. 
         point layout example: (2d) x0y0, x0y1, x1y0, x1y1;
@@ -63,7 +63,7 @@ def center_to_corner_box3d(centers,
                            origin=(0.5, 0.5, 0.5),
                            axis=2):
     """convert kitti locations, dimensions and angles to corners
-    
+
     Args:
         centers (float array, shape=[N, 3]): locations in kitti label file.
         dims (float array, shape=[N, 3]): dimensions in kitti label file.
