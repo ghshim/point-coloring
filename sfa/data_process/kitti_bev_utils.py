@@ -113,13 +113,13 @@ def makeBEVMap(PointCloud_,Camera_,Calib_, boundary):
 
     # Perform grouped operations to minimize the number of groupby calls
     grouped = df.groupby(['grid_x', 'grid_y'])
-
-    # Calculate normalized height within each grid cell
-    max_z_per_group = grouped['z'].transform('max')
-    df['normalized_z'] = df['z'] / max_z_per_group
-    df['normalized_z'] /= grouped['normalized_z'].transform('sum').replace(0, 0.0001)
+    
     # Hyperparameter for weighting the value based on proximity to the mean intensity
-    exp_factor = 0.1
+    exp_factor = 10
+    # Calculate normalized height within each grid cell
+    df['normalized_z'] = 1 - df['z'] / df.groupby(['grid_x', 'grid_y'])['z'].transform('max')
+    df['normalized_z'] = np.exp(-0.1 * df['normalized_z'])
+    df['normalized_z'] /= df.groupby(['grid_x', 'grid_y'])['normalized_z'].transform('sum').replace(0, 0.0001)
 
     # Calculate normalized intensity within each grid cell
     mean_intensity_per_group = grouped['intensity'].transform('mean')
