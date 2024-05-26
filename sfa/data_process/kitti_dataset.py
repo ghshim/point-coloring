@@ -177,7 +177,7 @@ class KittiDataset(Dataset):
         else:
             labels = np.array(labels, dtype=np.float32)
             has_labels = True
-
+        
         return labels, has_labels
 
     def build_targets(self, labels, hflipped):
@@ -310,7 +310,7 @@ if __name__ == '__main__':
     configs.num_classes = 3
     configs.output_width = 608
 
-    configs.dataset_dir = os.path.join('../../', 'dataset', 'kitti')
+    configs.dataset_dir = os.path.join('../', 'dataset', 'kitti')
     # lidar_aug = OneOf([
     #     Random_Rotation(limit_angle=np.pi / 4, p=1.),
     #     Random_Scaling(scaling_range=(0.95, 1.05), p=1.),
@@ -336,8 +336,9 @@ if __name__ == '__main__':
             w1 = int(w / cnf.DISCRETIZATION)
             l1 = int(l / cnf.DISCRETIZATION)
 
-            drawRotatedBox(bev_map, x1, y1, w1, l1,
-                           yaw, cnf.colors[int(cls_id)])
+            # merge_rgb_to_bev(img_rgb, bev_map, )
+            # drawRotatedBox(bev_map, x1, y1, w1, l1,
+            #                yaw, cnf.colors[int(cls_id)])
         # Rotate the bev_map
         bev_map = cv2.rotate(bev_map, cv2.ROTATE_180)
 

@@ -143,10 +143,10 @@ def merge_rgb_to_bev(img_rgb, img_bev, output_width):
     img_bev_h, img_bev_w = img_bev.shape[:2]
     ratio_bev = output_width / img_bev_w
     output_bev_h = int(ratio_bev * img_bev_h)
-    print (output_bev_h)
+    # print (output_bev_h)
 
     ret_img_bev = cv2.resize(img_bev, (output_width, output_bev_h))
-    print (ret_img_bev.shape)
+    # print (ret_img_bev.shape)
     out_img = np.zeros((output_rgb_h + output_bev_h, output_width, 3), dtype=np.uint8)
     # Upper: RGB --> BEV
     out_img[:output_rgb_h, ...] = ret_img_rgb

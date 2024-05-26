@@ -14,7 +14,7 @@ def get_mAP(prec):
     return sums / 11 * 100
 
 
-@numba.jit
+# @numba.jit
 def get_thresholds(scores: np.ndarray, num_gt, num_sample_pts=41):
     scores.sort()
     scores = scores[::-1]
@@ -734,7 +734,9 @@ def get_official_eval_result(gt_annos,
     overlap_easy = np.array([[0.7, 0.5, 0.5, 0.7, 0.5, 0.5, 0.5, 0.5],
                             [0.5, 0.25, 0.25, 0.5, 0.25, 0.5, 0.5, 0.5],
                             [0.5, 0.25, 0.25, 0.5, 0.25, 0.5, 0.5, 0.5]])
-    min_overlaps = np.stack([overlap_mod, overlap_easy], axis=0)  # [2, 3, 5]
+    # min_overlaps = np.stack([overlap_mod, overlap_easy], axis=0)  # [2, 3, 5]
+    min_overlaps = np.expand_dims(overlap_mod, axis=0)
+    
     class_to_name = {
         0: 'Car',
         1: 'Pedestrian',
@@ -773,29 +775,36 @@ def get_official_eval_result(gt_annos,
         difficultys,
         z_axis=z_axis,
         z_center=z_center)
+    
+    data = {}
     for j, curcls in enumerate(current_classes):
         # mAP threshold array: [num_minoverlap, metric, class]
         # mAP result: [num_class, num_diff, num_minoverlap]
+        data[class_to_name[curcls]] = {}
         for i in range(min_overlaps.shape[0]):
             mAPbbox = get_mAP_v2(metrics["bbox"]["precision"][j, :, i])
-            mAPbbox = ", ".join(f"{v:.2f}" for v in mAPbbox)
+            # mAPbbox = ", ".join(f"{v:.2f}" for v in mAPbbox)
             mAPbev = get_mAP_v2(metrics["bev"]["precision"][j, :, i])
-            mAPbev = ", ".join(f"{v:.2f}" for v in mAPbev)
+            # mAPbev = ", ".join(f"{v:.2f}" for v in mAPbev)
             mAP3d = get_mAP_v2(metrics["3d"]["precision"][j, :, i])
-            mAP3d = ", ".join(f"{v:.2f}" for v in mAP3d)
-            result += print_str(
-                (f"{class_to_name[curcls]} "
-                 "AP(Average Precision)@{:.2f}, {:.2f}, {:.2f}:".format(*min_overlaps[i, :, j])))
-            result += print_str(f"bbox AP:{mAPbbox}")
-            result += print_str(f"bev  AP:{mAPbev}")
-            result += print_str(f"3d   AP:{mAP3d}")
+            # mAP3d = ", ".join(f"{v:.2f}" for v in mAP3d)
+
+            data[class_to_name[curcls]]['mAPbbox'] = mAPbbox.tolist()
+            data[class_to_name[curcls]]['mAPbev'] = mAPbev.tolist()
+            data[class_to_name[curcls]]['mAP3d'] = mAP3d.tolist()
+            # result += print_str(
+            #     (f"{class_to_name[curcls]} "
+            #      "AP(Average Precision)@{:.2f}, {:.2f}, {:.2f}:".format(*min_overlaps[i, :, j])))
+            # result += print_str(f"bbox AP:{mAPbbox}")
+            # result += print_str(f"bev  AP:{mAPbev}")
+            # result += print_str(f"3d   AP:{mAP3d}")
             if compute_aos:
                 mAPaos = get_mAP_v2(metrics["bbox"]["orientation"][j, :, i])
-                mAPaos = ", ".join(f"{v:.2f}" for v in mAPaos)
-                result += print_str(f"aos  AP:{mAPaos}")
-
-    return result
-
+                # mAPaos = ", ".join(f"{v:.2f}" for v in mAPaos)
+                # result += print_str(f"aos  AP:{mAPaos}")
+                data[class_to_name[curcls]]['mAPaos'] = mAPaos.tolist()
+    print("data:", data)
+    return data
 
 def get_coco_eval_result(gt_annos,
                          dt_annos,

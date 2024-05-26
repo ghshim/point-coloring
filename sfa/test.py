@@ -26,6 +26,7 @@ import sys
 import os
 import time
 import warnings
+import json
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -40,12 +41,13 @@ if src_dir not in sys.path:
 def parse_test_configs():
     parser = argparse.ArgumentParser(
         description='Testing config for the Implementation')
+    parser.add_argument('--show', action='store_true', help='Show result or not')
     parser.add_argument('--saved_fn', type=str, default='fpn_resnet_18', metavar='FN',
                         help='The name using for saving logs, models,...')
     parser.add_argument('-a', '--arch', type=str, default='fpn_resnet_18', metavar='ARCH',
                         help='The name of the model architecture')
     parser.add_argument('--pretrained_path', type=str,
-                        default='../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth', metavar='PATH',
+                        default='../checkpoints/fpn_resnet_18best_point_coloring.pth', metavar='PATH',
                         help='the path of the pretrained checkpoint')
     parser.add_argument('--K', type=int, default=50,
                         help='the number of top K')
@@ -103,8 +105,9 @@ def parse_test_configs():
 
     if configs.save_test_output:
         configs.results_dir = os.path.join(
-            configs.root_dir, 'results', configs.saved_fn)
+            configs.root_dir, 'results', 'test')
         make_folder(configs.results_dir)
+        make_folder(os.path.join(configs.results_dir, 'detect'))
 
     return configs
 
@@ -127,15 +130,16 @@ if __name__ == '__main__':
     out_cap = None
 
     model.eval()
-
     test_dataloader = create_test_dataloader(configs)
     with torch.no_grad():
+        fps = {}
         for batch_idx, batch_data in enumerate(test_dataloader):
             start_t = time.time()
+
             metadatas, bev_maps, img_rgbs = batch_data
             input_bev_maps = bev_maps.to(
                 configs.device, non_blocking=True).float()
-            t1 = time_synchronized()
+            # t1 = time_synchronized()
             outputs = model(input_bev_maps)  # inferencing
             outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
             outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
@@ -145,7 +149,7 @@ if __name__ == '__main__':
             detections = detections.cpu().numpy().astype(np.float32)
             detections = post_processing(
                 detections, configs.num_classes, configs.down_ratio, configs.peak_thresh)
-            t2 = time_synchronized()
+            # t2 = time_synchronized()
 
             detections = detections[0]  # only first batch
             # Draw prediction in the image
@@ -156,7 +160,7 @@ if __name__ == '__main__':
             # print(bev_mapp)
             bev_map = draw_predictions(
                 bev_map, detections.copy(), configs.num_classes)
-
+            
             # Rotate the bev_map
             bev_map = cv2.rotate(bev_map, cv2.ROTATE_180)
 
@@ -175,22 +179,27 @@ if __name__ == '__main__':
 
             out_img = merge_rgb_to_bev(
                 img_bgr, bev_map, output_width=configs.output_width)
-            print("kiti_dets: ", kitti_dets)
+            # print("kiti_dets: ", kitti_dets)
+            
             end_t = time.time()
-            print(f'Inference time: {end_t - start_t:.5f}s')
-            print('\tDone testing the {}th sample, time: {:.1f}ms, speed {:.2f}FPS'.format(batch_idx, (t2 - t1) * 1000,
-                                                                                           1 / (t2 - t1)))
+            
+            inference_t = end_t - start_t
+            
+            print(f'Inference time: {inference_t:.5f}s')
+            print(f'Done testing the {batch_idx}th sample, time: {inference_t*1000:.5f}ms, speed {1/inference_t:.2f}FPS')
+            
             if configs.save_test_output:
                 if configs.output_format == 'image':
                     img_fn = os.path.basename(metadatas['img_path'][0])[:-4]
-                    cv2.imwrite(os.path.join(configs.results_dir,
+                    cv2.imwrite(os.path.join(configs.results_dir, 'detect',
                                 '{}.jpg'.format(img_fn)), out_img)
+                    fps[img_fn] = inference_t
                 elif configs.output_format == 'video':
                     if out_cap is None:
                         out_cap_h, out_cap_w = out_img.shape[:2]
                         fourcc = cv2.VideoWriter_fourcc(*'MJPG')
                         out_cap = cv2.VideoWriter(
-                            os.path.join(configs.results_dir, '{}.avi'.format(
+                            os.path.join(configs.results_dir, 'detect', '{}.avi'.format(
                                 configs.output_video_fn)),
                             fourcc, 30, (out_cap_w, out_cap_h))
 
@@ -198,11 +207,16 @@ if __name__ == '__main__':
                 else:
                     raise TypeError
 
-            cv2.imshow('test-img', out_img)
-            print(
-                '\n[INFO] Press n to see the next sample >>> Press Esc to quit...\n')
-            if cv2.waitKey(0) & 0xFF == 27:
-                break
+            if configs.show:
+                cv2.imshow('test-img', out_img)
+                print(
+                    '\n[INFO] Press n to see the next sample >>> Press Esc to quit...\n')
+                if cv2.waitKey(0) & 0xFF == 27:
+                    break
     if out_cap:
         out_cap.release()
-    cv2.destroyAllWindows()
+    if configs.show:
+        cv2.destroyAllWindows()
+    if configs.save_test_output:
+        with open(os.path.join(configs.root_dir, 'results', 'fps.json'), 'w') as file:
+            json.dump(fps, file)

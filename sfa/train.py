@@ -33,7 +33,7 @@ import sys
 import random
 import os
 import warnings
-
+import json
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
@@ -68,8 +68,19 @@ def main():
         configs.world_size = configs.ngpus_per_node * configs.world_size
         mp.spawn(main_worker, nprocs=configs.ngpus_per_node, args=(configs,))
     else:
-        main_worker(configs.gpu_idx, configs)
+        eval_result, total_train_loss, total_val_loss = \
+                            main_worker(configs.gpu_idx, configs)
 
+
+    with open('../results/eval_result.json', 'w') as file:
+        json.dump(eval_result, file)
+
+    with open('../results/train_loss.json', 'w+') as file:
+        json.dump(total_train_loss, file)
+
+    with open('../results/val_loss.json', 'w+') as file:
+        json.dump(total_val_loss, file)
+        
 
 def main_worker(gpu_idx, configs):
     configs.gpu_idx = gpu_idx
@@ -156,16 +167,19 @@ def main_worker(gpu_idx, configs):
         logger.info(">>> Loading dataset & getting dataloader...")
     # Create dataloader
     train_dataloader, train_sampler = create_train_dataloader(configs)
+    val_dataloader = create_val_dataloader(configs)
     if logger is not None:
         logger.info('number of batches in training set: {}'.format(
             len(train_dataloader)))
 
-    if configs.evaluate:
-        val_dataloader = create_val_dataloader(configs)
-        val_loss = validate(val_dataloader, model, configs)
-        print('val_loss: {:.4e}'.format(val_loss))
-        return
-
+    # if configs.evaluate:
+    #     val_dataloader = create_val_dataloader(configs)
+    #     val_loss, eval_result = validate(val_dataloader, model, configs)
+    #     print('val_loss: {:.4e}'.format(val_loss))
+    #     return
+    total_train_loss = []; total_val_loss = []
+    eval_result = {}
+    
     for epoch in range(configs.start_epoch, configs.num_epochs + 1):
         if logger is not None:
             logger.info('{}'.format('*-' * 40))
@@ -176,17 +190,27 @@ def main_worker(gpu_idx, configs):
 
         if configs.distributed:
             train_sampler.set_epoch(epoch)
+        
         # train for one epoch
-        train_one_epoch(train_dataloader, model, optimizer,
+        train_loss = train_one_epoch(train_dataloader, model, optimizer,
                         lr_scheduler, epoch, configs, logger, tb_writer)
+        
+        # validation
         if (not configs.no_val) and (epoch % configs.checkpoint_freq == 0):
-            val_dataloader = create_val_dataloader(configs)
             print('number of batches in val_dataloader: {}'.format(
                 len(val_dataloader)))
-            val_loss = validate(val_dataloader, model, configs)
+            # do evaluation
+            val_loss, result = validate(val_dataloader, model, configs)
+            # save loss
+            total_val_loss.append(val_loss)
             print('val_loss: {:.4e}'.format(val_loss))
+
             if tb_writer is not None:
                 tb_writer.add_scalar('Val_loss', val_loss, epoch)
+            eval_result[f'epoch{epoch}'] = result
+
+        # save loss
+        total_train_loss.append(train_loss)
 
         # Save checkpoint
         if configs.is_master_node and ((epoch % configs.checkpoint_freq) == 0):
@@ -204,6 +228,8 @@ def main_worker(gpu_idx, configs):
         tb_writer.close()
     if configs.distributed:
         cleanup()
+    
+    return eval_result, total_train_loss, total_val_loss
 
 
 def cleanup():
@@ -228,9 +254,9 @@ def train_one_epoch(train_dataloader, model, optimizer, lr_scheduler, epoch, con
         metadatas, imgs, targets = batch_data
 
         # Debugging: print shapes and some values
-        print(f"Batch index: {batch_idx}")
-        print(f"Images shape: {imgs.shape}")
-        print(f"Targets: {targets}")
+        # print(f"Batch index: {batch_idx}")
+        # print(f"Images shape: {imgs.shape}")
+        # print(f"Targets: {targets}")
 
         batch_size = imgs.size(0)
         global_step = num_iters_per_epoch * (epoch - 1) + batch_idx + 1
@@ -240,14 +266,14 @@ def train_one_epoch(train_dataloader, model, optimizer, lr_scheduler, epoch, con
         imgs = imgs.to(configs.device, non_blocking=True).float()
 
         # Debugging: print device and dtype
-        print(f"Images device: {imgs.device}, dtype: {imgs.dtype}")
-        print(
-            f"Targets device: {targets[k].device}, dtype: {targets[k].dtype}")
+        # print(f"Images device: {imgs.device}, dtype: {imgs.dtype}")
+        # print(
+        #     f"Targets device: {targets[k].device}, dtype: {targets[k].dtype}")
 
         outputs = model(imgs)
 
         # Debugging: print outputs
-        print(f"Outputs: {outputs}")
+        # print(f"Outputs: {outputs}")
 
         total_loss, loss_stats = criterion(outputs, targets)
 
@@ -287,6 +313,8 @@ def train_one_epoch(train_dataloader, model, optimizer, lr_scheduler, epoch, con
                 logger.info(progress.get_message(batch_idx))
 
         start_time = time.time()
+
+    return losses.avg
 
 
 def validate(val_dataloader, model, configs):
@@ -333,10 +361,10 @@ def validate(val_dataloader, model, configs):
         gt_annos = kitti_common.get_label_annos(
             val_dataloader.dataset.label_dir, val_dataloader.dataset.sample_id_list)
         print("Doing evaluation")
-        print(get_official_eval_result(gt_annos, dt_annos,
-              [i for i in range(configs.num_classes)]))
+        result = get_official_eval_result(gt_annos, dt_annos,
+              [i for i in range(configs.num_classes)])
 
-    return losses.avg
+    return losses.avg, result
 
 
 if __name__ == '__main__':
