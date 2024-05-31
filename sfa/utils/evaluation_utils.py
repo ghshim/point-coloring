@@ -34,10 +34,8 @@ from data_process.transformation import lidar_to_camera_box
 import kitti_common
 import box_np_ops
 
-
 import config.kitti_config as cnf
 from data_process.kitti_bev_utils import drawRotatedBox
-
 
 def _nms(heat, kernel=3):
     pad = (kernel - 1) // 2

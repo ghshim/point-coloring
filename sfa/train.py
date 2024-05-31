@@ -72,13 +72,13 @@ def main():
                             main_worker(configs.gpu_idx, configs)
 
 
-    with open('../results/eval_result.json', 'w') as file:
+    with open('../results/eval_result_1.json', 'w') as file:
         json.dump(eval_result, file)
 
-    with open('../results/train_loss.json', 'w+') as file:
+    with open('../results/train_loss_1.json', 'w+') as file:
         json.dump(total_train_loss, file)
 
-    with open('../results/val_loss.json', 'w+') as file:
+    with open('../results/val_loss_1.json', 'w+') as file:
         json.dump(total_val_loss, file)
         
 
@@ -363,6 +363,7 @@ def validate(val_dataloader, model, configs):
         print("Doing evaluation")
         result = get_official_eval_result(gt_annos, dt_annos,
               [i for i in range(configs.num_classes)])
+        print(result)
 
     return losses.avg, result
 
