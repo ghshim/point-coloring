@@ -22,7 +22,7 @@
 **Update 2020.09.06**: Added `ROS` source code, contributed by [@AhmedARadwan](https://github.com/AhmedARadwan). 
 The implementation is [here](https://github.com/maudzung/SFA3D/tree/ea0222c1b35489dc35d8452c989c4b014e20e0da).
 
-## Demonstration (on a single GTX 1080Ti)
+## Demonstration (on a single RTX A6000)
 
 [![demo](http://img.youtube.com/vi/FI8mJIXkgX4/0.jpg)](http://www.youtube.com/watch?v=FI8mJIXkgX4)
 
