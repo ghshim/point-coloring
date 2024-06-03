@@ -62,8 +62,6 @@ ${ROOT}
         └── classes_names.txt
 ```
 
----
-
 ## How to Run
 
 First, navigate to the `sfa` directory:
