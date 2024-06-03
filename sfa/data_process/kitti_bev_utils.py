@@ -3,8 +3,6 @@ import sys
 import cv2
 import numpy as np
 import pandas as pd
-from pytictoc import TicToc
-t = TicToc()
 
 src_dir = os.path.dirname(os.path.realpath(__file__))
 while not src_dir.endswith("sfa"):
@@ -21,15 +19,47 @@ def get_calib(self, idx):
     return Calibration(calib_file)
 
 def add_h_labels(lidar_points):
+    '''
+    Adds horizontal labels to LiDAR points by concatenating a column of sequential integers (labels) to the input LiDAR points array. 
+    Each point receives a unique label corresponding to its row index.
+    
+    Args: 
+        lidar_points (numpy array): The input array of LiDAR points.
+    Returns: 
+        labeled_data (numpy array): The LiDAR points array with an additional column for labels.
+    '''
     labeled_data = np.hstack((lidar_points, np.arange(len(lidar_points)).reshape(-1, 1)))
     return labeled_data
 
 def add_v_labels(lidar_points):
+    '''
+    Adds vertical labels to LiDAR points by stacking a row of sequential integers (labels) on top of the input LiDAR points array. 
+    Each column receives a unique label corresponding to its column index.
+    
+    Args: 
+        lidar_points (numpy array): The input array of LiDAR points.
+    Returns: 
+        labeled_data (numpy array): The LiDAR points array with an additional row for labels.
+    '''
     labeled_data = np.vstack((lidar_points, np.arange(len(lidar_points[1]))))
     return labeled_data
 
-def makeBEVMap(PointCloud_,Camera_,Calib_, boundary):
-    # t.tic()
+def makeBEVMap(PointCloud_, Camera_, Calib_, boundary):
+    '''
+    This function generates a 6-channel Bird’s Eye View (BEV) map from LiDAR and camera data, which we proposed in the project. 
+    It involves transforming LiDAR data to camera coordinates, filtering and projecting the data onto the image plane, 
+    obtaining RGB values, and creating height, intensity, and density maps. The BEV map integrates these maps with RGB values 
+    to produce a comprehensive representation suitable for input into neural networks like YOLO.
+    
+    Args:
+        PointCloud_ (numpy array): The input LiDAR point cloud data.
+        Camera_ (numpy array): The camera image data.
+        Calib_ (dictionary): Calibration parameters for transforming LiDAR data to camera coordinates.
+        boundary (dictionary): Boundary definitions for generating the BEV map.
+
+    Returns: 
+        RGB_Map (numpy array): A 6-channel BEV map integrating LiDAR and RGB data for further processing in neural network architectures.
+    '''
     # BEV_HEIGHT = 607 , BEV_WIDTH = 607 
     Height = cnf.BEV_HEIGHT + 1
     Width = cnf.BEV_WIDTH + 1
@@ -158,7 +188,6 @@ def makeBEVMap(PointCloud_,Camera_,Calib_, boundary):
     RGB_Map[1, :, :] = heightMap[:cnf.BEV_HEIGHT, :cnf.BEV_WIDTH]  # lidar g_map
     RGB_Map[0, :, :] = intensityMap[:cnf.BEV_HEIGHT, :cnf.BEV_WIDTH]  # lidar b_map
     
-    # t.toc()
     return RGB_Map
 
 

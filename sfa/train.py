@@ -9,7 +9,6 @@
 
 """
 
-from utils.eval import get_official_eval_result
 from utils import kitti_common
 from utils.evaluation_utils import decode, post_processing, draw_predictions, convert_det_to_real_values, convert_detection_to_kitti_annos
 from utils.torch_utils import _sigmoid
@@ -34,6 +33,7 @@ import random
 import os
 import warnings
 
+from evaluate_ import validate
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
@@ -160,12 +160,6 @@ def main_worker(gpu_idx, configs):
         logger.info('number of batches in training set: {}'.format(
             len(train_dataloader)))
 
-    if configs.evaluate:
-        val_dataloader = create_val_dataloader(configs)
-        val_loss = validate(val_dataloader, model, configs)
-        print('val_loss: {:.4e}'.format(val_loss))
-        return
-
     for epoch in range(configs.start_epoch, configs.num_epochs + 1):
         if logger is not None:
             logger.info('{}'.format('*-' * 40))
@@ -176,9 +170,12 @@ def main_worker(gpu_idx, configs):
 
         if configs.distributed:
             train_sampler.set_epoch(epoch)
+        
+        '''Train'''
         # train for one epoch
         train_one_epoch(train_dataloader, model, optimizer,
                         lr_scheduler, epoch, configs, logger, tb_writer)
+        '''Validation'''
         if (not configs.no_val) and (epoch % configs.checkpoint_freq == 0):
             val_dataloader = create_val_dataloader(configs)
             print('number of batches in val_dataloader: {}'.format(
@@ -287,56 +284,6 @@ def train_one_epoch(train_dataloader, model, optimizer, lr_scheduler, epoch, con
                 logger.info(progress.get_message(batch_idx))
 
         start_time = time.time()
-
-
-def validate(val_dataloader, model, configs):
-    losses = AverageMeter('Loss', ':.4e')
-    criterion = Compute_Loss(device=configs.device)
-
-    model.eval()
-    detections_list = []
-    with torch.no_grad():
-        for batch_idx, batch_data in enumerate(tqdm(val_dataloader)):
-            metadatas, imgs, targets = batch_data
-            batch_size = imgs.size(0)
-            for k in targets.keys():
-                targets[k] = targets[k].to(configs.device, non_blocking=True)
-            imgs = imgs.to(configs.device, non_blocking=True).float()
-            outputs = model(imgs)
-            total_loss, loss_stats = criterion(outputs, targets)
-            # For torch.nn.DataParallel case
-            if (not configs.distributed) and (configs.gpu_idx is None):
-                total_loss = torch.mean(total_loss)
-
-            if configs.distributed:
-                reduced_loss = reduce_tensor(
-                    total_loss.data, configs.world_size)
-            else:
-                reduced_loss = total_loss.data
-            losses.update(to_python_float(reduced_loss), batch_size)
-            outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
-            outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
-
-            for idx in range(outputs['hm_cen'].shape[0]):
-                # detections size (batch_size, K, 10)
-                detections = decode(outputs['hm_cen'][idx:idx+1, :], outputs['cen_offset'][idx:idx+1, :],
-                                    outputs['direction'][idx:idx+1,
-                                                         :], outputs['z_coor'][idx:idx+1, :],
-                                    outputs['dim'][idx:idx+1, :], K=configs.K)
-                detections = detections.cpu().numpy().astype(np.float32)
-                detections = post_processing(
-                    detections, configs.num_classes, configs.down_ratio)
-                detections_list.append(detections[0])
-
-        dt_annos = convert_detection_to_kitti_annos(
-            detections_list, val_dataloader.dataset)
-        gt_annos = kitti_common.get_label_annos(
-            val_dataloader.dataset.label_dir, val_dataloader.dataset.sample_id_list)
-        print("Doing evaluation")
-        print(get_official_eval_result(gt_annos, dt_annos,
-              [i for i in range(configs.num_classes)]))
-
-    return losses.avg
 
 
 if __name__ == '__main__':

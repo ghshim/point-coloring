@@ -127,7 +127,6 @@ def decode(hm_cen, cen_offset, direction, z_coor, dim, K=40):
     # (scores-0:1, ys-1:2, xs-2:3, z_coor-3:4, dim-4:7, direction-7:9, clses-9:10)
     # detections: [batch_size, K, 10]
     detections = torch.cat([scores, xs, ys, z_coor, dim, direction, clses], dim=2)
-    print (detections.shape)
 
     return detections
 
