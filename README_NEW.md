@@ -13,13 +13,11 @@ We are highly motivated by https://github.com/maudzung/SFA3D
 - [x]  **6-Channel BEV Map**: Proposes a novel 6-channel BEV map for improved detection capabilities.
 - [x]  **Pre-trained Models Available**: Offers pre-trained models to facilitate quick deployment and testing.
 
----
 
 ## Description
 
 Abstract here
 
----
 
 ## Getting Started
 
@@ -101,8 +99,6 @@ To evaluate the model's performance, run:
 ```bash
 python evaluate.py --pretrained_path ../checkpoints/fpn_resnet_18/best_point_coloring.pth
 ```
-
----
 
 ## Contact
 
