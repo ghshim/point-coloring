@@ -204,5 +204,3 @@ ${ROOT}
 [pytorch-image]: https://img.shields.io/badge/PyTorch-1.5-2BAF2B.svg
 [pytorch-url]: https://pytorch.org/
 ```
-
-This README provides a comprehensive overview of the PointColoring project, outlining its features, highlights, setup instructions, and usage details, tailored specifically to the context of 3D object detection using sensor fusion.
