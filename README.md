@@ -19,9 +19,6 @@
 - [x] Introduction and explanation from _`Computer Vision and Perception for Self-Driving Cars Course`_ **[Youtube link](https://youtu.be/cPOtULagNnI?t=4858)**
 - [x] PointColoring is used in the _`Udacity Self-Driving Car Engineer Nanodegree Program: Sensor Fusion and Tracking`_ **[GitHub link](https://github.com/udacity/nd013-c2-fusion-starter/tree/b1455b8ff433cb7f537d62e526209738293e7d8b)**
 
-**Update 2020.09.06**: Added `ROS` source code, contributed by [@AhmedARadwan](https://github.com/AhmedARadwan). 
-The implementation is [here](https://github.com/maudzung/SFA3D/tree/ea0222c1b35489dc35d8452c989c4b014e20e0da).
-
 ## Demonstration (on a single RTX A6000)
 
 [![demo](http://img.youtube.com/vi/FI8mJIXkgX4/0.jpg)](http://www.youtube.com/watch?v=FI8mJIXkgX4)
@@ -88,25 +85,13 @@ The data for the demonstration will be automatically downloaded by executing the
 python train.py --gpu_idx 0
 ```
 
-##### Distributed Data Parallel Training
+#### Evaluation
 
-- **Single machine (node), multiple GPUs**
+To evaluate the model using a pre-trained checkpoint:
 
 ```shell
-python train.py --multiprocessing-distributed --world-size 1 --rank 0 --batch_size 64 --num_workers 8
+python train.py --evaluate --gpu_idx 0 --pretrained_path=../checkpoints/fpn_resnet_18/fpn_resnet_18_epoch_300.pth
 ```
-
-- **Two machines (two nodes), multiple GPUs**
-
-   - _**First machine**_
-    ```shell
-    python train.py --dist-url 'tcp://IP_OF_NODE1:FREEPORT' --multiprocessing-distributed --world-size 2 --rank 0 --batch_size 64 --num_workers 8
-    ```
-
-   - _**Second machine**_
-    ```shell
-    python train.py --dist-url 'tcp://IP_OF_NODE2:FREEPORT' --multiprocessing-distributed --world-size 2 --rank 1 --batch_size 64 --num_workers 8
-    ```
 
 #### Tensorboard
 
@@ -122,7 +107,7 @@ Then go to [http://localhost:6006/](http://localhost:6006/)
 ## Contact
 
 If you find this work useful, please give it a star! <br>
-If you find any errors or have suggestions, please contact us (**Email:** `shkim@unist.ac.kr`). <br>
+If you find any errors or have suggestions, please contact us (**Email:** `asdfasdfm@unist.ac.kr`). <br>
 Thank you!
 
 ## Citation
