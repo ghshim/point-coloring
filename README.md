@@ -15,7 +15,7 @@ We are highly motivated by https://github.com/maudzung/SFA3D
 
 ## Description
 
-Abstract here
+We present PointColoring, a sensor fusion method for real-time 3D object detection. Our method demonstrates enhanced performance in 3D and Bird's-Eye-View detection tasks with improvements in real-time processing and detection accuracy
 
 ## Getting Started
 
